@@ -1,9 +1,3 @@
-CREATE DATABASE BookStoreDB;
-GO
-
-USE BookStoreDB;
-GO
-
 CREATE TABLE Roles
 (
     RoleId   INT IDENTITY(1,1) PRIMARY KEY,
