@@ -1,0 +1,7 @@
+C:\Users\young\source\repos\BookStore\BookStore\obj\Debug\BookStore.csproj.AssemblyReference.cache
+C:\Users\young\source\repos\BookStore\BookStore\obj\Debug\BookStore.csproj.CoreCompileInputs.cache
+C:\Users\young\source\repos\BookStore\BookStore\bin\Debug\ShoeStore.exe.config
+C:\Users\young\source\repos\BookStore\BookStore\bin\Debug\ShoeStore.exe
+C:\Users\young\source\repos\BookStore\BookStore\bin\Debug\ShoeStore.pdb
+C:\Users\young\source\repos\BookStore\BookStore\obj\Debug\ShoeStore.exe
+C:\Users\young\source\repos\BookStore\BookStore\obj\Debug\ShoeStore.pdb
