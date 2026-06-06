@@ -1,203 +1,200 @@
-CREATE TABLE Roles
+create table Roles
 (
-    RoleId   INT IDENTITY(1,1) PRIMARY KEY,
-    RoleName NVARCHAR(50) NOT NULL UNIQUE
+    roleid   int identity(1,1) primary key,
+    rolename nvarchar(50) not null unique
 );
-GO
+go
 
-CREATE TABLE Users
+create table Users
 (
-    UserId   INT IDENTITY(1,1) PRIMARY KEY,
-    Login    NVARCHAR(100) NOT NULL UNIQUE,
-    Password NVARCHAR(100) NOT NULL,
-    FullName NVARCHAR(150) NOT NULL,
-    RoleId   INT NOT NULL,
-    CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(RoleId)
+    userid   int identity(1,1) primary key,
+    login    nvarchar(100) not null unique,
+    password nvarchar(100) not null,
+    fullname nvarchar(150) not null,
+    roleid   int not null,
+    constraint fk_users_roles foreign key (roleid) references roles(roleid)
 );
-GO
+go
 
-CREATE TABLE Categories
+create table Categories
 (
-    CategoryId   INT IDENTITY(1,1) PRIMARY KEY,
-    CategoryName NVARCHAR(100) NOT NULL UNIQUE
+    categoryid   int identity(1,1) primary key,
+    categoryname nvarchar(100) not null unique
 );
-GO
-
-CREATE TABLE Manufacturers
+go
+)
+create table Manufacturers
 (
-    ManufacturerId   INT IDENTITY(1,1) PRIMARY KEY,
-    ManufacturerName NVARCHAR(100) NOT NULL UNIQUE
+    manufacturerid   int identity(1,1) primary key,
+    manufacturername nvarchar(100) not null unique
 );
-GO
+go
 
-CREATE TABLE Suppliers
+create table Suppliers
 (
-    SupplierId   INT IDENTITY(1,1) PRIMARY KEY,
-    SupplierName NVARCHAR(100) NOT NULL UNIQUE
+    supplierid   int identity(1,1) primary key,
+    supplyname nvarchar(100) not null unique
 );
-GO
+go
 
-CREATE TABLE Units
+create table Units
 (
-    UnitId   INT IDENTITY(1,1) PRIMARY KEY,
-    UnitName NVARCHAR(30) NOT NULL UNIQUE
+    unitid   int identity(1,1) primary key,
+    unitname nvarchar(30) not null unique
 );
-GO
+go
 
-CREATE TABLE Products
+create table Products
 (
-    ProductId      INT IDENTITY(1,1) PRIMARY KEY,
-    ProductName    NVARCHAR(200) NOT NULL,
-    Description    NVARCHAR(1000) NULL,
-    CategoryId     INT NOT NULL,
-    ManufacturerId INT NOT NULL,
-    SupplierId     INT NOT NULL,
-    UnitId         INT NOT NULL,
-    Price          DECIMAL(10,2) NOT NULL CHECK (Price >= 0),
-    Quantity       INT NOT NULL CHECK (Quantity >= 0),
-    Discount       INT NOT NULL DEFAULT 0 CHECK (Discount BETWEEN 0 AND 100),
-    ImagePath      NVARCHAR(300) NULL,
-    Article        NVARCHAR(50) NULL,
-    CONSTRAINT FK_Products_Categories    FOREIGN KEY (CategoryId)     REFERENCES Categories(CategoryId),
-    CONSTRAINT FK_Products_Manufacturers FOREIGN KEY (ManufacturerId) REFERENCES Manufacturers(ManufacturerId),
-    CONSTRAINT FK_Products_Suppliers     FOREIGN KEY (SupplierId)     REFERENCES Suppliers(SupplierId),
-    CONSTRAINT FK_Products_Units         FOREIGN KEY (UnitId)         REFERENCES Units(UnitId)
+    productid      int identity(1,1) primary key,
+    productname    nvarchar(200) not null,
+    description    nvarchar(1000) null,
+    categoryid     int not null,
+    manufacturerid int not null,
+    supplierid     int not null,
+    unitid         int not null,
+    price          decimal(10,2) not null check (price >= 0),
+    quantity       int not null check (quantity >= 0),
+    discount       int not null default 0 check (discount between 0 and 100),
+    imagepath      nvarchar(300) null,
+    article        nvarchar(50) null,
+    constraint fk_products_categories    foreign key (categoryid)     references categories(categoryid),
+    constraint fk_products_manufacturers foreign key (manufacturerid) references manufacturers(manufacturerid),
+    constraint fk_products_suppliers     foreign key (supplierid)     references suppliers(supplierid),
+    constraint fk_products_units         foreign key (unitid)         references units(unitid)
 );
-GO
+go
 
-CREATE TABLE OrderStatuses
+create table OrderStatuses
 (
-    StatusId   INT IDENTITY(1,1) PRIMARY KEY,
-    StatusName NVARCHAR(50) NOT NULL UNIQUE
+    statusid   int identity(1,1) primary key,
+    statusname nvarchar(50) not null unique
 );
-GO
+go
 
-CREATE TABLE PickupPoints
+create table PickupPoints
 (
-    PickupPointId INT IDENTITY(1,1) PRIMARY KEY,
-    Address       NVARCHAR(300) NOT NULL UNIQUE
+    pickuppointid int identity(1,1) primary key,
+    address       nvarchar(300) not null unique
 );
-GO
+go
 
-CREATE TABLE Orders
+create table Orders
 (
-    OrderId       INT IDENTITY(1,1) PRIMARY KEY,
-    OrderCode     NVARCHAR(20) NOT NULL UNIQUE,
-    StatusId      INT NOT NULL,
-    PickupPointId INT NOT NULL,
-    OrderDate     DATE NOT NULL,
-    DeliveryDate  DATE NULL,
-    UserId        INT NULL,
-    PickupCode    NVARCHAR(10) NULL,
-    CONSTRAINT FK_Orders_Statuses     FOREIGN KEY (StatusId)      REFERENCES OrderStatuses(StatusId),
-    CONSTRAINT FK_Orders_PickupPoints FOREIGN KEY (PickupPointId) REFERENCES PickupPoints(PickupPointId),
-    CONSTRAINT FK_Orders_Users        FOREIGN KEY (UserId)        REFERENCES Users(UserId)
+    orderid       int identity(1,1) primary key,
+    ordercode     nvarchar(20) not null unique,
+    statusid      int not null,
+    pickuppointid int not null,
+    orderdate     date not null,
+    deliverydate  date null,
+    userid        int null,
+    pickupcode    nvarchar(10) null,
+    constraint fk_orders_statuses     foreign key (statusid)      references orderstatuses(statusid),
+    constraint fk_orders_pickuppoints foreign key (pickuppointid) references pickuppoints(pickuppointid),
+    constraint fk_orders_users        foreign key (userid)        references users(userid)
 );
-GO
+go
 
-CREATE TABLE OrderItems
+create table OrderItems
 (
-    OrderItemId INT IDENTITY(1,1) PRIMARY KEY,
-    OrderId     INT NOT NULL,
-    ProductId   INT NOT NULL,
-    Quantity    INT NOT NULL CHECK (Quantity > 0),
-    CONSTRAINT FK_OrderItems_Orders   FOREIGN KEY (OrderId)   REFERENCES Orders(OrderId)   ON DELETE CASCADE,
-    CONSTRAINT FK_OrderItems_Products FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
+    orderitemid int identity(1,1) primary key,
+    orderid     int not null,
+    productid   int not null,
+    quantity    int not null check (quantity > 0),
+    constraint fk_orderitems_orders   foreign key (orderid)   references orders(orderid)   on delete cascade,
+    constraint fk_orderitems_products foreign key (productid) references products(productid)
 );
-GO
+go
 
-INSERT INTO Roles (RoleName) VALUES 
-(N'Клиент'),
-(N'Менеджер'),
-(N'Администратор');
-GO
+insert into roles (rolename) values 
+(N'клиент'),
+(N'менеджер'),
+(N'администратор');
+go
 
-INSERT INTO Users (Login, Password, FullName, RoleId) VALUES
-(N'94d5ous@gmail.com', N'uzWC67', N'Никифорова Анна Семеновна', 3),
-(N'uth4iz@mail.com', N'2L6KZG', N'Стелина Евгения Петровна', 3),
-(N'5d4zbu@tutanota.com', N'rwVDh9', N'Михайлюк Анна Вячеславовна', 3),
-(N'ptec8ym@yahoo.com', N'LdNyos', N'Ситдикова Елена Анатольевна', 2),
-(N'1qz4kw@mail.com', N'gynQMT', N'Ворсин Петр Евгеньевич', 2),
-(N'4np6se@mail.com', N'AtnDjr', N'Старикова Елена Павловна', 2),
-(N'yzls62@outlook.com', N'JlFRCZ', N'Никифорова Весения Николаевна', 1),
-(N'1diph5e@tutanota.com', N'8ntwUp', N'Сазонов Руслан Германович', 1),
-(N'tjde7c@yahoo.com', N'YOyhfR', N'Одинцов Серафим Артёмович', 1),
-(N'wpmrc3do@tutanota.com', N'RSbvHv', N'Степанов Михаил Артёмович', 1);
-GO
+insert into users (login, password, fullname, roleid) values
+(N'94d5ous@gmail.com', N'uzWC67', N'никифорова анна семеновна', 3),
+(N'uth4iz@mail.com', N'2L6KZG', N'стелина евгения петровна', 3),
+(N'5d4zbu@tutanota.com', N'rwVDh9', N'михайлюк анна вячеславовна', 3),
+(N'ptec8ym@yahoo.com', N'LdNyos', N'ситдикова елена анатольевна', 2),
+(N'1qz4kw@mail.com', N'gynQMT', N'ворсин петр евгеньевич', 2),
+(N'4np6se@mail.com', N'AtnDjr', N'старикова елена павловна', 2),
+(N'yzls62@outlook.com', N'JlFRCZ', N'никифорова весения николаевна', 1),
+(N'1diph5e@tutanota.com', N'8ntwUp', N'сазонов руслан германович', 1),
+(N'tjde7c@yahoo.com', N'YOyhfR', N'одинцов серафим артёмович', 1),
+(N'wpmrc3do@tutanota.com', N'RSbvHv', N'степанов михаил артёмович', 1);
+go
 
-INSERT INTO Categories (CategoryName) VALUES
-(N'Художественная литература'),
-(N'Учебник для вузов'),
-(N'Хрестоматия'),
-(N'Учебное пособие');
-GO
+insert into categories (categoryname) values
+(N'художественная литература'),
+(N'учебник для вузов'),
+(N'хрестоматия'),
+(N'учебное пособие');
+go
 
-INSERT INTO Manufacturers (ManufacturerName) VALUES
-(N'Яуза'), (N'Т8 Издательские технологии'), (N'Прогресс книга'),
-(N'Время'), (N'Лениздат'), (N'Неолит'), (N'Амрита-Русь'),
-(N'Златоуст'), (N'Аспект Пресс'), (N'ВКН');
-GO
+insert into manufacturers (manufacturername) values
+(N'яуза'), (N'т8 издательские технологии'), (N'прогресс книга'),
+(N'время'), (N'лениздат'), (N'неолит'), (N'амрита-русь'),
+(N'златоуст'), (N'аспект пресс'), (N'вкн');
+go
 
-INSERT INTO Suppliers (SupplierName) VALUES
-(N'Виктор Астафьев'), (N'Гилберт Кит Честертон'), (N'Кирилл Каланджи'),
-(N'Людмила Улицкая'), (N'Аркадий Гайдар'), (N'Юрий Родичев'),
-(N'Дэниел Джей Барретт'), (N'Шон Кэрролл'), (N'Яков Гордин'),
-(N'Иосиф Бродский'), (N'Янь Чуннянь'), (N'Дмитрий Мережковский'),
-(N'Дмитрий Щербаков'), (N'Роджер Осборн, Дэн Стерджис'),
-(N'Любовь Беликова, Инна Ерофеева, Татьяна Шутова'), (N'Сергей Моргачев'),
-(N'Екатерина Габарта, Ирина Игнатьева'), (N'Татьяна Лопаткина, Софья Маннапова');
-GO
+insert into suppliers (supplyname) values
+(N'виктор астафьев'), (N'гилберт кит честертон'), (N'кирилл каланджи'),
+(N'людмила улицкая'), (N'аркадий гайдар'), (N'юрий родичев'),
+(N'дэниел джей барретт'), (N'шон кэрролл'), (N'яков гордин'),
+(N'иосиф бродский'), (N'янь чуннянь'), (N'дмитрий мережковский'),
+(N'дмитрий щербаков'), (N'роджер осборн, дэн стерджис'),
+(N'любовь беликова, инна ерофеева, татьяна шутова'), (N'сергей моргачев'),
+(N'екатерина габарта, ирина игнатьева'), (N'татьяна лопаткина, софья маннапова');
+go
 
-INSERT INTO Units (UnitName) VALUES (N'шт');
-GO
+insert into units (unitname) values (N'шт');
+go
 
-INSERT INTO Products (ProductName, Description, CategoryId, ManufacturerId, SupplierId, UnitId, Price, Quantity, Discount, ImagePath, Article) VALUES
-(N'Прокляты и убиты', N'Роман-эпопея Виктора Астафьева', 1, 1, 1, 1, 585, 6, 25, N'1.jpg', N'А112Т4'),
-(N'Тайны и загадки отца Брауна', N'Классические детективы', 1, 1, 2, 1, 193, 9, 30, N'2.jpg', N'G843H5'),
-(N'Девайс', N'Фантастический роман', 1, 2, 3, 1, 1599, 12, 5, N'3.jpg', N'D325D4'),
-(N'Необыкновенное обыкновенное чудо', N'Школьные истории', 1, 2, 4, 1, 549, 15, 15, N'4.jpg', N'S432T5'),
-(N'Чук и Гек', N'Повести и рассказы', 1, 2, 5, 1, 209, 3, 18, N'5.jpg', N'F325D4'),
-(N'Информационная безопасность', N'Национальные стандарты РФ', 2, 3, 6, 1, 3899, 3, 22, N'6.jpg', N'G432G6'),
-(N'Linux. Командная строка', N'Лучшие практики', 2, 3, 7, 1, 1799, 5, 4, N'7.jpg', N'H542F5'),
-(N'Квантовые миры', N'Возникновение пространства-времени', 2, 3, 8, 1, 1349, 4, 5, N'8.jpg', N'C346F5'),
-(N'Вселенная', N'Происхождение жизни и космос', 2, 3, 8, 1, 1799, 2, 6, NULL, N'F256G6'),
-(N'Пушкин. Бродский. Империя и судьба', N'Комплект из 2 томов', 3, 4, 9, 1, 529, 6, 8, N'10.jpg', N'J532V5'),
-(N'Иосиф Бродский. Избранные эссе', N'Комплект из 6 книг', 3, 5, 10, 1, 4925, 24, 2, N'11.jpg', N'G643F4'),
-(N'Тысячелетие императорской керамики', N'История китайского фарфора', 3, 5, 11, 1, 2599, 4, 5, N'12.jpg', N'J326V5'),
-(N'Вечные спутники', N'Портреты из всемирной литературы', 3, 5, 12, 1, 1599, 6, 0, N'13.jpg', N'J632F6'),
-(N'Формирование литературной репутации Н.Г.Чернышевского', N'Монография', 3, 6, 13, 1, 1349, 8, 2, N'14.jpg', N'G632H6'),
-(N'Теория искусства. Краткий путеводитель', N'', 3, 6, 14, 1, 879, 2, 3, N'15.jpg', N'M642E5'),
-(N'Религиозные верования', N'С древнейших времен до наших дней', 3, 7, 13, 1, 879, 6, 4, N'16.jpg', N'G543F5'),
-(N'Русский язык: Первые шаги. Часть 3', N'Учебное пособие', 4, 8, 15, 1, 2699, 9, 8, N'17.jpg', N'B653G6'),
-(N'Синтетический образ индивидуального психического мира', N'', 3, 8, 16, 1, 1099, 4, 9, N'18.jpg', N'J735J7'),
-(N'Английский язык в спорте', N'Учебное пособие', 4, 9, 17, 1, 1999, 0, 2, N'19.jpg', N'H436H7'),
-(N'Лексика и грамматика современного китайского языка', N'', 4, 10, 18, 1, 608, 12, 25, N'20.jpg', N'H475R5');
-GO
+insert into products (productname, description, categoryid, manufacturerid, supplierid, unitid, price, quantity, discount, imagepath, article) values
+(N'прокляты и убиты', N'роман-эпопея виктора астафьева', 1, 1, 1, 1, 585, 6, 25, N'1.jpg', N'а112т4'),
+(N'тайны и загадки отца брауна', N'классические детективы', 1, 1, 2, 1, 193, 9, 30, N'2.jpg', N'g843h5'),
+(N'девайс', N'фантастический роман', 1, 2, 3, 1, 1599, 12, 5, N'3.jpg', N'd325d4'),
+(N'необыкновенное обыкновенное чудо', N'школьные истории', 1, 2, 4, 1, 549, 15, 15, N'4.jpg', N's432t5'),
+(N'чук и гек', N'повести и рассказы', 1, 2, 5, 1, 209, 3, 18, N'5.jpg', N'f325d4'),
+(N'информационная безопасность', N'национальные стандарты рф', 2, 3, 6, 1, 3899, 3, 22, N'6.jpg', N'g432g6'),
+(N'linux. командная строка', N'лучшие практики', 2, 3, 7, 1, 1799, 5, 4, N'7.jpg', N'h542f5'),
+(N'квантовые миры', N'возникновение пространства-времени', 2, 3, 8, 1, 1349, 4, 5, N'8.jpg', N'c346f5'),
+(N'вселенная', N'происхождение жизни и космос', 2, 3, 8, 1, 1799, 2, 6, null, N'f256g6'),
+(N'пушкин. бродский. империя и судьба', N'комплект из 2 томов', 3, 4, 9, 1, 529, 6, 8, N'10.jpg', N'j532v5'),
+(N'иосиф бродский. избранные эссе', N'комплект из 6 книг', 3, 5, 10, 1, 4925, 24, 2, N'11.jpg', N'g643f4'),
+(N'тысячелетие императорской керамики', N'история китайского фарфора', 3, 5, 11, 1, 2599, 4, 5, N'12.jpg', N'j326v5'),
+(N'вечные спутники', N'портреты из всемирной литературы', 3, 5, 12, 1, 1599, 6, 0, N'13.jpg', N'j632f6'),
+(N'формирование литературной репутации н.г.чернышевского', N'монография', 3, 6, 13, 1, 1349, 8, 2, N'14.jpg', N'g632h6'),
+(N'теория искусства. краткий путеводитель', N'', 3, 6, 14, 1, 879, 2, 3, N'15.jpg', N'm642e5'),
+(N'религиозные верования', N'с древнейших времен до наших дней', 3, 7, 13, 1, 879, 6, 4, N'16.jpg', N'g543f5'),
+(N'русский язык: первые шаги. часть 3', N'учебное пособие', 4, 8, 15, 1, 2699, 9, 8, N'17.jpg', N'b653g6'),
+(N'синтетический образ индивидуального психического мира', N'', 3, 8, 16, 1, 1099, 4, 9, N'18.jpg', N'j735j7'),
+(N'английский язык в спорте', N'учебное пособие', 4, 9, 17, 1, 1999, 0, 2, N'19.jpg', N'h436h7'),
+(N'лексика и грамматика современного китайского языка', N'', 4, 10, 18, 1, 608, 12, 25, N'20.jpg', N'h475r5');
+go
 
-INSERT INTO OrderStatuses (StatusName) VALUES
-(N'Новый'), (N'В обработке'), (N'Готов к выдаче'), (N'Завершён'), (N'Отменён');
-GO
+insert into orderstatuses (statusname) values
+(N'новый'), (N'в обработке'), (N'готов к выдаче'), (N'завершён'), (N'отменён');
+go
 
-INSERT INTO PickupPoints (Address) VALUES
-(N'420151, г. Лесной, ул. Вишневая, 32'),
-(N'125061, г. Лесной, ул. Подгорная, 8'),
-(N'630370, г. Лесной, ул. Шоссейная, 24'),
-(N'400562, г. Лесной, ул. Зеленая, 32'),
-(N'614510, г. Лесной, ул. Маяковского, 47'),
-(N'410542, г. Лесной, ул. Светлая, 46'),
-(N'620839, г. Лесной, ул. Цветочная, 8'),
-(N'443890, г. Лесной, ул. Коммунистическая, 1');
-GO
+insert into pickuppoints (address) values
+(N'420151, г. лесной, ул. вишневая, 32'),
+(N'125061, г. лесной, ул. подгорная, 8'),
+(N'630370, г. лесной, ул. шоссейная, 24'),
+(N'400562, г. лесной, ул. зеленая, 32'),
+(N'614510, г. лесной, ул. маяковского, 47'),
+(N'410542, г. лесной, ул. светлая, 46'),
+(N'620839, г. лесной, ул. цветочная, 8'),
+(N'443890, г. лесной, ул. коммунистическая, 1');
+go
 
-INSERT INTO Orders (OrderCode, StatusId, PickupPointId, OrderDate, DeliveryDate, UserId, PickupCode) VALUES
-(N'ORD-001', 4, 1, '2024-02-27', '2024-04-20', 10, N'901'),
-(N'ORD-002', 4, 2, '2023-09-28', '2024-04-21', 7, N'902'),
-(N'ORD-003', 4, 1, '2024-03-21', '2024-04-22', 8, N'903');
-GO
+insert into orders (ordercode, statusid, pickuppointid, orderdate, deliverydate, userid, pickupcode) values
+(N'ord-001', 4, 1, '2024-02-27', '2024-04-20', 10, N'901'),
+(N'ord-002', 4, 2, '2023-09-28', '2024-04-21', 7, N'902'),
+(N'ord-003', 4, 1, '2024-03-21', '2024-04-22', 8, N'903');
+go
 
-INSERT INTO OrderItems (OrderId, ProductId, Quantity) VALUES
+insert into orderitems (orderid, productid, quantity) values
 (1, 1, 2), (1, 2, 2), (2, 2, 1), (2, 1, 1), (3, 3, 10), (3, 4, 10);
-GO
-
-PRINT N'База данных BookStoreDB успешно создана!';
-GO
+go
